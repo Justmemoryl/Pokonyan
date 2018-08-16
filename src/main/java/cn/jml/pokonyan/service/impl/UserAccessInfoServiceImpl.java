@@ -8,7 +8,7 @@ import cn.jml.pokonyan.service.UserAccessInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import cn.jml.pokonyan.common.utils.LogUtil;
-import cn.jml.pokonyan.common.utils.IPUtil;
+import cn.jml.pokonyan.common.utils.WebUtil;
 import cn.jml.pokonyan.remote.LocationInfoService;
 import cn.jml.pokonyan.remote.entity.request.LocationInfoRequest;
 import cn.jml.pokonyan.remote.entity.response.LocationInfoResponse;
@@ -34,8 +34,8 @@ public class UserAccessInfoServiceImpl implements UserAccessInfoService {
      * 保存用户访问信息到数据库
      */
     @Override public void saveUserAccessInfo() {
-        String publicIP = IPUtil.getV4IP();
-        String privateIP = IPUtil.getLocalIp();
+        String publicIP = WebUtil.getV4IP();
+        String privateIP = WebUtil.getLocalIp();
         LocationInfoResponse locationInfo = getLocationInfoByIP(publicIP);
         UserAccessInfoEntity userAccessInfoEntity = resolveLocationInfo(publicIP, privateIP, locationInfo);
         if (userAccessInfoEntity != null) {

@@ -18,7 +18,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Slf4j
-public class IPUtil {
+public class WebUtil {
 
     /**
      * 获取Request
