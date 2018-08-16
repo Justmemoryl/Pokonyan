@@ -1,0 +1,57 @@
+server:
+  port: 9999
+
+# Datasource information
+spring:
+  # MySQL
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://118.24.20.210:3306/justmemoryl
+    username: root
+    password: lp243832
+
+  # MongoDB
+  #  data:
+  #    mongodb:
+  #      uri: mongodb://127.0.0.1:27017/justmemoryl
+
+  # Solr
+    solr:
+      host:
+      repositories:
+        enabled: false
+
+  # Redis
+  redis:
+    host: localhost
+    port: 6379
+
+  # RabbitMQ
+  rabbitmq:
+    listener:
+      simple:
+        auto-startup: false
+
+  # jpa
+  jpa:
+    hibernate:
+      ddl-auto: update
+      naming:
+        # 使用hibernate自定义表名/字段名
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    show-sql: false
+
+# eureka
+eureka:
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+
+# logback setting
+logging:
+  config: classpath:logback-spring.xml
+  # path: /home/jml/logs/
+  # path: D:\\Workspace\\Justmemoryl\\logs\\
+  level:
+    root: info
+
