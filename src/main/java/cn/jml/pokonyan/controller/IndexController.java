@@ -7,18 +7,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * @version 1.0 created by Justmemoryl on 2018/7/3 16:58
  */
 @Slf4j
 @RestController
 public class IndexController {
-    @Autowired private UserAccessInfoService userAccessInfoService;
+    @Autowired
+    private UserAccessInfoService userAccessInfoService;
 
-    @RequestMapping("/")
-    private ModelAndView index() {
+    @RequestMapping(value = "/")
+    private ModelAndView index(HttpServletRequest request) {
         ModelAndView mv = new ModelAndView();
-        userAccessInfoService.saveUserAccessInfo();
+        userAccessInfoService.saveUserAccessInfo(request);
         mv.setViewName("index.html");
         return mv;
     }

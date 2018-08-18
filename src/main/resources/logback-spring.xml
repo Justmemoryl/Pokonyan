@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration  scan="true" scanPeriod="60 seconds" debug="false">
-    <contextName>POKONYAN-WEB</contextName>
+    <contextName>pokonyan-web</contextName>
     <!-- 日志根目录-->
-    <springProperty scope="context" name="LOG_ROOT_HOME" source="logging.path" defaultValue="D:\Workspace\Justmemoryl\Pokonyan\logs"/>
-    <!--<springProperty scope="context" name="LOG_ROOT_HOME" source="logging.path" defaultValue="/home/jml/logs"/>-->
+    <!--<springProperty scope="context" name="LOG_ROOT_HOME" source="logging.path" defaultValue="D:\Workspace\Justmemoryl\Pokonyan\logs"/>-->
+    <springProperty scope="context" name="LOG_ROOT_HOME" source="logging.path" defaultValue="/home/jml/logs"/>
 
     <!-- 日志级别 -->
     <springProperty scope="context" name="LOG_ROOT_LEVEL" source="logging.level.root" defaultValue="INFO"/>
@@ -26,7 +26,7 @@
     <appender name="FILE_ALL" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <Prudent>true</Prudent>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_PATH}/%d{yyyy-MM-dd}/POKONYAN-WEB-BUSINESS.log</fileNamePattern>
+            <fileNamePattern>${LOG_PATH}/%d{yyyy-MM-dd}/pokonyan-web-business.log</fileNamePattern>
             <MaxHistory>${MAX_HISTORY}</MaxHistory>
         </rollingPolicy>
         <encoder>
@@ -43,7 +43,7 @@
             <onMismatch>DENY </onMismatch>
         </filter>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <FileNamePattern>${LOG_PATH}/%d{yyyy-MM-dd}/POKONYAN-WEB-ERROR.log</FileNamePattern>
+            <FileNamePattern>${LOG_PATH}/%d{yyyy-MM-dd}/pokonyan-web-error.log</FileNamePattern>
             <MaxHistory>${MAX_HISTORY}</MaxHistory>
         </rollingPolicy>
         <encoder>

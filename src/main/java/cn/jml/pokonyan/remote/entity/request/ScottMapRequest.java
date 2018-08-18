@@ -10,9 +10,17 @@ import lombok.ToString;
 @Data
 @ToString
 @EqualsAndHashCode
-public class LocationInfoRequest {
+public class ScottMapRequest {
     /**
      * 用户请求IP地址
      */
     private String ip;
+    /**
+     * 高德地图API请求密钥
+     */
+    private String key;
+    /**
+     * 请求返回格式：xml/json
+     */
+    private String output;
 }

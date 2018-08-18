@@ -12,9 +12,9 @@ import com.alibaba.fastjson.JSON;
 
 import cn.jml.pokonyan.common.constants.Constants;
 import cn.jml.pokonyan.common.utils.LogUtil;
-import cn.jml.pokonyan.remote.LocationInfoService;
-import cn.jml.pokonyan.remote.entity.request.LocationInfoRequest;
-import cn.jml.pokonyan.remote.entity.response.LocationInfoResponse;
+import cn.jml.pokonyan.remote.ScottMapService;
+import cn.jml.pokonyan.remote.entity.request.ScottMapRequest;
+import cn.jml.pokonyan.remote.entity.response.ScottMapResponse;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -22,14 +22,14 @@ import lombok.extern.slf4j.Slf4j;
  **/
 @Slf4j
 @Component
-public class LocationInfoServiceImpl implements LocationInfoService {
+public class ScottMapServiceImpl implements ScottMapService {
 
     @Override
-    public LocationInfoResponse getLocationInfoFromBaiduAPI(LocationInfoRequest request) {
+    public ScottMapResponse getLocationInfoByIP(ScottMapRequest request) {
         BufferedReader bIn = null;
-        LocationInfoResponse result = new LocationInfoResponse();
+        ScottMapResponse result;
         try {
-            URL url = new URL(Constants.BAIDU_API_URL + "?ip=" + request.getIp() + "&ak=" + Constants.BAIDU_API_KEY + "&coor=bd09ll");
+            URL url = new URL(Constants.SCOTTMAP_API_URL + "?ip=" + request.getIp() + "&key=" + request.getKey() + "&output=" + request.getOutput());
             URLConnection conn = url.openConnection();
             conn.connect();
             bIn = new BufferedReader(new InputStreamReader(conn.getInputStream()));
@@ -38,16 +38,16 @@ public class LocationInfoServiceImpl implements LocationInfoService {
             while ((line = bIn.readLine()) != null) {
                 sb.append(line);
             }
-            result = JSON.parseObject(sb.toString(), LocationInfoResponse.class);
+            result = JSON.parseObject(sb.toString(), ScottMapResponse.class);
             return result;
         } catch (Exception e) {
-            LogUtil.error(log, "向百度地图API发送请求失败，原因：%s", e.getMessage());
+            LogUtil.error(e, log, "向高德地图API发送请求失败，原因：%s", e.getMessage());
         } finally {
             if (bIn != null) {
                 try {
                     bIn.close();
                 } catch (IOException e) {
-                    LogUtil.error(log, "关闭BufferedReader失败，原因：%s", e.getMessage());
+                    LogUtil.error(e, log, "关闭BufferedReader失败，原因：%s", e.getMessage());
                 }
             }
         }

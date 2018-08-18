@@ -1,9 +1,9 @@
 package cn.jml.pokonyan.repository.mysql.entity;
 
-import cn.jml.pokonyan.repository.mysql.primary.IPKey;
 import lombok.Data;
 import lombok.ToString;
 
+import javax.jdo.annotations.PrimaryKey;
 import javax.persistence.*;
 
 @Data
@@ -11,41 +11,35 @@ import javax.persistence.*;
 @Entity
 @Table(name = "UserAccessInfo")
 public class UserAccessInfoEntity {
-    @EmbeddedId
-    private IPKey  key;
     /**
-     * 经度
+     * 用户发起请求的外网IP
      */
-    @Column(name = "longitude")
-    private String longitude;
+    @PrimaryKey
+    @Column(name = "ip")
+    private String ip;
     /**
-     * 纬度
-     */
-    @Column(name = "latitude")
-    private String latitude;
-    /**
-     * 省份
+     * 省份名称
      */
     @Column(name = "province")
     private String province;
     /**
-     * 城市
+     * 城市名称
      */
     @Column(name = "city")
     private String city;
     /**
-     * 地理位置详情
+     * 城市的adcode编码
      */
-    @Column(name = "locationDetail")
-    private String locationDetail;
+    @Column(name = "adcode")
+    private String adcode;
     /**
-     * 位置及网络详情
+     * 所在城市矩形区域范围
      */
-    @Column(name = "addrees")
-    private String addrees;
+    @Column(name = "rectangle")
+    private String rectangle;
     /**
-     * 插入时间
+     * 最近的一次访问时间
      */
-    @Column(name = "insertTime")
-    private String insertTime;
+    @Column(name = "time")
+    private String time;
 }

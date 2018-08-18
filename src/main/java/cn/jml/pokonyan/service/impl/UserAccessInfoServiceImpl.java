@@ -1,20 +1,21 @@
 package cn.jml.pokonyan.service.impl;
 
+import cn.jml.pokonyan.common.constants.Constants;
 import cn.jml.pokonyan.common.utils.DateUtil;
 import cn.jml.pokonyan.repository.mysql.UserAccessInfoDao;
 import cn.jml.pokonyan.repository.mysql.entity.UserAccessInfoEntity;
-import cn.jml.pokonyan.repository.mysql.primary.IPKey;
 import cn.jml.pokonyan.service.UserAccessInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import cn.jml.pokonyan.common.utils.LogUtil;
 import cn.jml.pokonyan.common.utils.WebUtil;
-import cn.jml.pokonyan.remote.LocationInfoService;
-import cn.jml.pokonyan.remote.entity.request.LocationInfoRequest;
-import cn.jml.pokonyan.remote.entity.response.LocationInfoResponse;
+import cn.jml.pokonyan.remote.ScottMapService;
+import cn.jml.pokonyan.remote.entity.request.ScottMapRequest;
+import cn.jml.pokonyan.remote.entity.response.ScottMapResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
 /**
@@ -26,23 +27,23 @@ import java.util.Date;
 @Service
 public class UserAccessInfoServiceImpl implements UserAccessInfoService {
     @Autowired
-    private UserAccessInfoDao   repository;
+    private UserAccessInfoDao repository;
     @Autowired
-    private LocationInfoService locationInfoService;
+    private ScottMapService   scottMapService;
 
     /**
      * 保存用户访问信息到数据库
      */
-    @Override public void saveUserAccessInfo() {
-        String publicIP = WebUtil.getV4IP();
-        String privateIP = WebUtil.getLocalIp();
-        LocationInfoResponse locationInfo = getLocationInfoByIP(publicIP);
-        UserAccessInfoEntity userAccessInfoEntity = resolveLocationInfo(publicIP, privateIP, locationInfo);
+    @Override
+    public void saveUserAccessInfo(HttpServletRequest request) {
+        String ip = WebUtil.getOuterNetIp(request);
+        ScottMapResponse locationInfo = getLocationInfoByIPFromScottMap(ip);
+        UserAccessInfoEntity userAccessInfoEntity = resolveLocationInfo(ip, locationInfo);
         if (userAccessInfoEntity != null) {
             try {
                 repository.save(userAccessInfoEntity);
             } catch (Exception e) {
-                LogUtil.error(log, "用户访问信息入库失败，原因：%s", e.getMessage());
+                LogUtil.error(e, log, "用户访问信息入库失败，原因：%s", e.getMessage());
             }
         }
     }
@@ -50,55 +51,46 @@ public class UserAccessInfoServiceImpl implements UserAccessInfoService {
     /**
      * 根据用户公网IP地址获取用户详细位置信息
      *
-     * @param realIP
+     * @param ip
+     *            用户外网IP
      * @return
      */
-    private LocationInfoResponse getLocationInfoByIP(String realIP) {
-        LocationInfoResponse result = new LocationInfoResponse();
-        LocationInfoRequest request = new LocationInfoRequest();
-        request.setIp(realIP);
+    private ScottMapResponse getLocationInfoByIPFromScottMap(String ip) {
+        ScottMapResponse result = new ScottMapResponse();
+        ScottMapRequest request = new ScottMapRequest();
+        request.setIp(ip);
+        request.setKey(Constants.SCOTTMAP_API_KEY);
+        request.setOutput("json");
         try {
-            result = locationInfoService.getLocationInfoFromBaiduAPI(request);
+            result = scottMapService.getLocationInfoByIP(request);
         } catch (Exception e) {
-            LogUtil.error(log, "调用百度地图API失败，原因：%s", e.getMessage());
+            LogUtil.error(e, log, "调用高德地图API失败，原因：%s", e.getMessage());
         }
         return result;
     }
 
     /**
-     * 解析百度地图返回的地址信息，方便入库
+     * 解析高德地图返回的地址信息，方便入库
      *
-     * @param publicIP
+     * @param ip
+     *            用户外网IP
      * @param locationInfo
+     *            高德地图返回的地址信息
      * @return
      */
-    private UserAccessInfoEntity resolveLocationInfo(String publicIP, String localIP, LocationInfoResponse locationInfo) {
+    private UserAccessInfoEntity resolveLocationInfo(String ip, ScottMapResponse locationInfo) {
         UserAccessInfoEntity result = new UserAccessInfoEntity();
-        IPKey primarykey = new IPKey();
-        primarykey.setPublicIP(publicIP);
-        primarykey.setLocalIP(localIP);
-        result.setKey(primarykey);
-        if ("0".equals(locationInfo.getStatus())) {
-            result.setAddrees(locationInfo.getAddress());
-            result.setInsertTime(DateUtil.formatFullStandardDateTime(new Date()));
-            // 街道
-            String street = locationInfo.getContent().getAddressDetail().getStreet();
-            // 门牌号
-            String streetNum = locationInfo.getContent().getAddressDetail().getStreetNumber();
-            // 省份
-            String province = locationInfo.getContent().getAddressDetail().getProvince();
-            // 城市
-            String city = locationInfo.getContent().getAddressDetail().getCity();
-            // 经度
-            result.setLongitude(locationInfo.getContent().getPoint().getX());
-            // 纬度
-            result.setLatitude(locationInfo.getContent().getPoint().getY());
-            result.setProvince(locationInfo.getContent().getAddressDetail().getProvince());
-            result.setCity(locationInfo.getContent().getAddressDetail().getCity());
-            result.setLocationDetail(province + city + street + streetNum);
+        result.setIp(ip);
+        if ("1".equals(locationInfo.getStatus())) {
+            result.setProvince(locationInfo.getProvince());
+            result.setCity(locationInfo.getCity());
+            result.setAdcode(locationInfo.getAdcode());
+            result.setRectangle(locationInfo.getRectangle());
+            result.setTime(DateUtil.formatFullStandardDateTime(new Date()));
             return result;
         } else {
-            LogUtil.error(log, "调用百度地图API成功，返回码异常 || Code：%s || Description：%s", locationInfo.getStatus(), locationInfo.getMessage());
+            LogUtil.error(log, "调用高德地图API成功，返回码异常 || Code：%s || Info：%s || InfoCode: %s", locationInfo.getStatus(), locationInfo.getInfo(),
+                locationInfo.getInfocode());
         }
         return null;
     }
