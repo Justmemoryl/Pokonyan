@@ -4,12 +4,12 @@ import cn.jml.pokonyan.common.constants.Constants;
 import cn.jml.pokonyan.common.utils.DateUtil;
 import cn.jml.pokonyan.repository.mysql.UserAccessInfoDao;
 import cn.jml.pokonyan.repository.mysql.entity.UserAccessInfoEntity;
-import cn.jml.pokonyan.service.UserAccessInfoService;
+import cn.jml.pokonyan.service.IUserAccessInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import cn.jml.pokonyan.common.utils.LogUtil;
 import cn.jml.pokonyan.common.utils.WebUtil;
-import cn.jml.pokonyan.remote.ScottMapService;
+import cn.jml.pokonyan.remote.IScottMapService;
 import cn.jml.pokonyan.remote.entity.request.ScottMapRequest;
 import cn.jml.pokonyan.remote.entity.response.ScottMapResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -25,11 +25,11 @@ import java.util.Date;
  */
 @Slf4j
 @Service
-public class UserAccessInfoServiceImpl implements UserAccessInfoService {
+public class IUserAccessInfoServiceImpl implements IUserAccessInfoService {
     @Autowired
     private UserAccessInfoDao repository;
     @Autowired
-    private ScottMapService   scottMapService;
+    private IScottMapService  IScottMapService;
 
     /**
      * 保存用户访问信息到数据库
@@ -62,7 +62,7 @@ public class UserAccessInfoServiceImpl implements UserAccessInfoService {
         request.setKey(Constants.SCOTTMAP_API_KEY);
         request.setOutput("json");
         try {
-            result = scottMapService.getLocationInfoByIP(request);
+            result = IScottMapService.getLocationInfoByIP(request);
         } catch (Exception e) {
             LogUtil.error(e, log, "调用高德地图API失败，原因：%s", e.getMessage());
         }

@@ -12,7 +12,7 @@ import com.alibaba.fastjson.JSON;
 
 import cn.jml.pokonyan.common.constants.Constants;
 import cn.jml.pokonyan.common.utils.LogUtil;
-import cn.jml.pokonyan.remote.ScottMapService;
+import cn.jml.pokonyan.remote.IScottMapService;
 import cn.jml.pokonyan.remote.entity.request.ScottMapRequest;
 import cn.jml.pokonyan.remote.entity.response.ScottMapResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
  **/
 @Slf4j
 @Component
-public class ScottMapServiceImpl implements ScottMapService {
+public class IScottMapServiceImpl implements IScottMapService {
 
     @Override
     public ScottMapResponse getLocationInfoByIP(ScottMapRequest request) {

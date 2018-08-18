@@ -1,6 +1,6 @@
 package cn.jml.pokonyan.controller;
 
-import cn.jml.pokonyan.service.UserAccessInfoService;
+import cn.jml.pokonyan.service.IUserAccessInfoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 public class IndexController {
     @Autowired
-    private UserAccessInfoService userAccessInfoService;
+    private IUserAccessInfoService userAccessInfoService;
 
     @RequestMapping(value = "/")
     private ModelAndView index(HttpServletRequest request) {

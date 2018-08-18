@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
  * Created by Jml on 2018/6/19 23:06
  **/
 @Component
-public interface ScottMapService {
+public interface IScottMapService {
     /**
      * 向指定URL(高德地图API)发送GET请求，根据IP地址获取详细地理位置信息
      *
