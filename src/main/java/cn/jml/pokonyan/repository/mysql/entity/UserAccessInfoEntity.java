@@ -3,7 +3,6 @@ package cn.jml.pokonyan.repository.mysql.entity;
 import lombok.Data;
 import lombok.ToString;
 
-import javax.jdo.annotations.PrimaryKey;
 import javax.persistence.*;
 
 @Data
@@ -14,7 +13,7 @@ public class UserAccessInfoEntity {
     /**
      * 用户发起请求的外网IP
      */
-    @PrimaryKey
+    @Id
     @Column(name = "ip")
     private String ip;
     /**

@@ -24,6 +24,8 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
         <spring-cloud.version>Edgware.SR3</spring-cloud.version>
+        <!-- 打包时加上时间戳 -->
+        <maven.build.timestamp.format>yyyyMMddHHmmss</maven.build.timestamp.format>
     </properties>
 
     <dependencies>
@@ -163,6 +165,9 @@
     </dependencyManagement>
 
     <build>
+        <finalName>
+            ${project.artifactId}-${project.version}_${current.time}
+        </finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -181,7 +186,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <name>current_time</name>
+                    <name>current.time</name>
                     <pattern>yyyyMMddHHmmss</pattern>
                     <timeZone>GMT+8</timeZone>
                 </configuration>

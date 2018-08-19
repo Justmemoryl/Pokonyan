@@ -19,5 +19,5 @@ public interface Constants {
     /**
      * 高德地图API调用KEY
      */
-    String SCOTTMAP_API_KEY = "https://restapi.amap.com/v3/ip";
+    String SCOTTMAP_API_KEY = "afc286441830a52d0def3ec16ff3d00a";
 }
